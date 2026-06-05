@@ -12,47 +12,25 @@ To follow along with this tutorial, you'll need:
 
 ## Install ArgoCD on your Cluster
 ```
-helm repo add argo https://argoproj.github.io/argo-helm
-helm repo update
 kubectl create namespace argocd
-helm install argocd argo/argo-cd --namespace argocd --version 7.7.0
+helm repo add argocd https://argoproj.github.io/argo-helm 
+helm repo update
+helm upgrade --install -n argocd argocd argocd/argo-cd
+
 ```
 
 ## Access ArgoCD UI
 
 ```
-kubectl port-forward svc/argocd-server -n argocd 8080:443
+kubectl -n argocd port-forward svc/argocd-server 8080:80
 ```
 
 ## Retrieve Credentials
 
 ```
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d && echo
 ```
 
-## API Calls
 
-Here are commands that you can use to add grades to the Grade Submission API. **Windows Users should use Git Bash**.
-
-```bash
-curl -X POST http://localhost:<port>/grades \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Harry", "subject": "Defense Against Dark Arts", "score": 95}'
-
-curl -X POST http://localhost:<port>/grades \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Ron", "subject": "Charms", "score": 82}'
-
-curl -X POST http://localhost:<port>/grades \
-  -H "Content-Type: application/json" \
-  -d '{"name": "Hermione", "subject": "Potions", "score": 98}'
-```
-
-To verify, you can get all grades with:
-```bash
-curl http://localhost:<port>/grades
-```
-
-## Become a Cloud and DevOps Engineer
 
 Learn every tool that matters: [https://rslim087a.github.io/rayanslim](https://rslim087a.github.io/rayanslim)
